@@ -1,64 +1,52 @@
-const API_URL = "https://inventario-backend-l6t0.onrender.com/productos";
+const URL_API = 'https://tu-backend-aqui.onrender.com/api/productos';
 
-// Función para consultar los datos guardados en MongoDB Atlas
-async function obtenerProductos() {
-  try {
-    const res = await fetch(API_URL);
-    const datos = await res.json();
+// 1. LEER (Listar al cargar)
+document.addEventListener('DOMContentLoaded', listarProductos);
 
-    const tabla = document.getElementById("tabla");
-    if (!tabla) return;
-
-    tabla.innerHTML = "";
-
-    datos.forEach(prod => {
-      tabla.innerHTML += `
-        <tr>
-          <td>${prod.nombre}</td>
-          <td>$${prod.precio}</td>
-          <td>${prod.existencia} pzas</td>
-        </tr>
-      `;
-    });
-
-  } catch (err) {
-    console.error("Error al traer datos:", err);
-  }
-}
-
-// Función para enviar un nuevo registro a MongoDB
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("formProducto");
-
-  if (!form) return;
-
-  form.addEventListener("submit", async (e) => {
+// 2. CREAR (Formulario)
+document.getElementById('formProducto').addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    const nuevoObj = {
-      nombre: document.getElementById("nombre").value,
-      precio: Number(document.getElementById("precio").value),
-      existencia: Number(document.getElementById("existencia").value)
+    const nuevoProducto = {
+        nombre: document.getElementById('nombre').value,
+        precio: document.getElementById('precio').value,
+        existencia: document.getElementById('existencia').value
     };
 
-    try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevoObj)
-      });
-
-      if (res.ok) {
-        alert("¡Guardado con éxito en MongoDB Atlas!");
-        form.reset();
-        obtenerProductos(); // recarga tabla
-      }
-
-    } catch (err) {
-      console.error("Error al enviar datos:", err);
-    }
-  });
-
-  // Cargar datos al iniciar
-  obtenerProductos();
+    await fetch(URL_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevoProducto)
+    });
+    
+    document.getElementById('formProducto').reset();
+    listarProductos();
 });
+
+// Función para listar
+async function listarProductos() {
+    const res = await fetch(URL_API);
+    const datos = await res.json();
+    const tabla = document.getElementById('tabla');
+    tabla.innerHTML = '';
+
+    datos.forEach(p => {
+        tabla.innerHTML += `
+            <tr>
+                <td>${p.nombre}</td>
+                <td>$${p.precio}</td>
+                <td>${p.existencia}</td>
+                <td>
+                    <button onclick="eliminarProducto('${p._id}')" style="background:red; color:white; border:none; padding:5px;">Eliminar</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// 3. ELIMINAR
+async function eliminarProducto(id) {
+    if(confirm('¿Seguro que quieres borrar este artículo?')) {
+        await fetch(`${URL_API}/${id}`, { method: 'DELETE' });
+        listarProductos();
+    }
+}
