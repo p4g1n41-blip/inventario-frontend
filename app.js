@@ -1,4 +1,4 @@
-const URL_API = 'https://tu-backend-aqui.onrender.com/api/productos';
+const URL_API = 'https://inventario-backend-l6t0.onrender.com/api/productos';
 
 // 1. LEER (Listar al cargar)
 document.addEventListener('DOMContentLoaded', listarProductos);
@@ -24,23 +24,27 @@ document.getElementById('formProducto').addEventListener('submit', async (e) => 
 
 // Función para listar
 async function listarProductos() {
-    const res = await fetch(URL_API);
-    const datos = await res.json();
-    const tabla = document.getElementById('tabla');
-    tabla.innerHTML = '';
+    try {
+        const res = await fetch(URL_API);
+        const datos = await res.json();
+        const tabla = document.getElementById('tabla');
+        tabla.innerHTML = '';
 
-    datos.forEach(p => {
-        tabla.innerHTML += `
-            <tr>
-                <td>${p.nombre}</td>
-                <td>$${p.precio}</td>
-                <td>${p.existencia}</td>
-                <td>
-                    <button onclick="eliminarProducto('${p._id}')" style="background:red; color:white; border:none; padding:5px;">Eliminar</button>
-                </td>
-            </tr>
-        `;
-    });
+        datos.forEach(p => {
+            tabla.innerHTML += `
+                <tr>
+                    <td>${p.nombre}</td>
+                    <td>$${p.precio}</td>
+                    <td>${p.existencia}</td>
+                    <td>
+                        <button onclick="eliminarProducto('${p._id}')" style="background:red; color:white; border:none; padding:5px; cursor:pointer;">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+        });
+    } catch (error) {
+        console.error("Error al cargar productos:", error);
+    }
 }
 
 // 3. ELIMINAR
