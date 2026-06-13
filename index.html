@@ -2,12 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inventario</title>
+    <title>Inventario CRUD</title>
     <style>
         body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
         .container { max-width: 600px; margin: auto; }
         table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
         th { background: #0066cc; color: white; }
     </style>
 </head>
@@ -18,13 +18,11 @@
             <input type="text" id="nombre" placeholder="Nombre" required>
             <input type="number" id="precio" placeholder="Precio" required>
             <input type="number" id="existencia" placeholder="Cantidad" required>
-            <button type="submit">Guardar</button>
+            <button type="submit">Guardar / Actualizar</button>
         </form>
-        <table>
-            <thead>
-                <tr><th>Artículo</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
-            </thead>
-            <tbody id="tabla"></tbody>
+        <table id="tabla">
+            <thead><tr><th>Artículo</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+            <tbody></tbody>
         </table>
     </div>
     <script src="app.js"></script>
